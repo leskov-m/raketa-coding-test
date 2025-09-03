@@ -18,19 +18,11 @@ readonly class GetProductsController
 
     public function get(RequestInterface $request): ResponseInterface
     {
-        $response = new JsonResponse();
-
         $rawRequest = json_decode($request->getBody()->getContents(), true);
 
-        $response->getBody()->write(
-            json_encode(
-                $this->productsVew->toArray($rawRequest['category']),
-                JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
-            )
-        );
+        $response = new JsonResponse();
+        $response->fill($this->productsVew->toArray($rawRequest['category']));
 
-        return $response
-            ->withHeader('Content-Type', 'application/json; charset=utf-8')
-            ->withStatus(200);
+        return $response->success();
     }
 }

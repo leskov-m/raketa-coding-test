@@ -37,18 +37,10 @@ readonly class AddToCartController
         ));
 
         $response = new JsonResponse();
-        $response->getBody()->write(
-            json_encode(
-                [
-                    'status' => 'success',
-                    'cart' => $this->cartView->toArray($cart)
-                ],
-                JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
-            )
-        );
+        $response->fill([
+            'cart' => $this->cartView->toArray($cart)
+        ]);
 
-        return $response
-            ->withHeader('Content-Type', 'application/json; charset=utf-8')
-            ->withStatus(200);
+        return $response->success();
     }
 }

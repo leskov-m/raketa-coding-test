@@ -20,19 +20,11 @@ readonly class GetCartController
 
     public function get(RequestInterface $request): ResponseInterface
     {
-        $response = new JsonResponse();
-
         $cart = $this->cartManager->getCart();
 
-        $response->getBody()->write(
-            json_encode(
-                $this->cartView->toArray($cart),
-                JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
-            )
-        );
+        $response = new JsonResponse();
+        $response->fill($this->cartView->toArray($cart));
 
-        return $response
-            ->withHeader('Content-Type', 'application/json; charset=utf-8')
-            ->withStatus(200);
+        return $response->success();
     }
 }

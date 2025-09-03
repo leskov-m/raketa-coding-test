@@ -7,12 +7,30 @@ namespace Raketa\BackendTestTask\Application\DTOResponse;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Raketa\BackendTestTask\Application\Contracts\ExtendedResponseInterface;
 
 /**
  * Класс заглушка
  */
-final class JsonResponse implements ResponseInterface
+final class JsonResponse implements ExtendedResponseInterface
 {
+    public function success(int $status = 200): ResponseInterface
+    {
+        return $this
+            ->withHeader('Content-Type', 'application/json; charset=utf-8')
+            ->withStatus(200);
+    }
+
+    public function fill(array $data, int $status = 200): void
+    {
+        $this->getBody()->write(
+            json_encode(
+                array_merge(['status' => $status], $data),
+                JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
+            )
+        );
+    }
+
     public function getProtocolVersion(): string
     {
         // TODO: Implement getProtocolVersion() method.
