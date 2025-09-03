@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Raketa\BackendTestTask\Infrastructure\Repository;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Raketa\BackendTestTask\Domain\Entity\Product;
 use Raketa\BackendTestTask\Domain\Repository\ProductRepositoryInterface;
@@ -16,6 +17,16 @@ class ProductRepository implements ProductRepositoryInterface
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
+    }
+
+    /**
+     * @description
+     * метод-заглушка для реализации whereIn
+     */
+    public function whereIn(string $field, array $values): array
+    {
+        // TODO: implementation
+        return [];
     }
 
     public function getByUuid(string $uuid): Product

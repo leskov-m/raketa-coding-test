@@ -16,26 +16,29 @@ readonly class CartView
 
     public function toArray(Cart $cart): array
     {
+        $customer = $cart->getCustomer();
+
         $data = [
             'uuid' => $cart->getUuid(),
             'customer' => [
-                'id' => $cart->getCustomer()->getId(),
+                'id' => $customer->getId(),
                 'name' => implode(' ', [
-                    $cart->getCustomer()->getLastName(),
-                    $cart->getCustomer()->getFirstName(),
-                    $cart->getCustomer()->getMiddleName(),
+                    $customer->getLastName(),
+                    $customer->getFirstName(),
+                    $customer->getMiddleName(),
                 ]),
-                'email' => $cart->getCustomer()->getEmail(),
+                'email' => $customer->getEmail(),
             ],
             'payment_method' => $cart->getPaymentMethod(),
         ];
 
+        $cartItems = $cart->getItems();
+        $cartItemsProductsMap = $this->buildCartProductsMap($cartItems);
+
         $total = 0;
         $data['items'] = [];
-        foreach ($cart->getItems() as $item) {
-            $total += $item->getPrice() * $item->getQuantity();
-            $product = $this->productRepository->getByUuid($item->getProductUuid());
-
+        foreach ($cartItems as $item) {
+            $product = $cartItemsProductsMap[$item->getProductUuid()];
             $data['items'][] = [
                 'uuid' => $item->getUuid(),
                 'price' => $item->getPrice(),
@@ -54,5 +57,34 @@ readonly class CartView
         $data['total'] = $total;
 
         return $data;
+    }
+
+    private function buildCartProductsMap(array $cartItems): array
+    {
+        $toSearch = [];
+
+        foreach ($cartItems as $item) {
+            $productUuid = $item->getProductUuid();
+
+            if (!in_array($productUuid, $toSearch, true)) {
+                $toSearch[] = $productUuid;
+            }
+        }
+
+        $products = $this->productRepository->whereIn('uuid', $toSearch);
+
+        $map = [];
+        foreach ($cartItems as $item) {
+            $map[$item->getProductUuid()] = $item;
+
+            foreach ($products as $product) {
+                if ($product->getUuid() === $item->getProductUuid()) {
+                    $map[$product->getUuid()] = $product;
+                    break;
+                }
+            }
+        }
+
+        return $map;
     }
 }
