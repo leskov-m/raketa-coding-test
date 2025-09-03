@@ -1,22 +1,26 @@
 <?php
 
-namespace Raketa\BackendTestTask\Controller;
+declare(strict_types=1);
+
+namespace Raketa\BackendTestTask\Presentation\Controller;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Raketa\BackendTestTask\Domain\CartItem;
-use Raketa\BackendTestTask\Repository\CartManager;
-use Raketa\BackendTestTask\Repository\ProductRepository;
-use Raketa\BackendTestTask\View\CartView;
+use Raketa\BackendTestTask\Application\DTOResponse\JsonResponse;
+use Raketa\BackendTestTask\Application\Service\CartService;
+use Raketa\BackendTestTask\Domain\Entity\CartItem;
+use Raketa\BackendTestTask\Domain\Repository\ProductRepositoryInterface;
+use Raketa\BackendTestTask\Presentation\View\CartView;
 use Ramsey\Uuid\Uuid;
 
 readonly class AddToCartController
 {
     public function __construct(
-        private ProductRepository $productRepository,
-        private CartView $cartView,
-        private CartManager $cartManager,
-    ) {
+        private ProductRepositoryInterface $productRepository,
+        private CartView                   $cartView,
+        private CartService                $cartService,
+    )
+    {
     }
 
     public function get(RequestInterface $request): ResponseInterface
@@ -24,7 +28,7 @@ readonly class AddToCartController
         $rawRequest = json_decode($request->getBody()->getContents(), true);
         $product = $this->productRepository->getByUuid($rawRequest['productUuid']);
 
-        $cart = $this->cartManager->getCart();
+        $cart = $this->cartService->getCart();
         $cart->addItem(new CartItem(
             Uuid::uuid4()->toString(),
             $product->getUuid(),

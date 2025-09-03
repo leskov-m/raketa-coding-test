@@ -2,11 +2,12 @@
 
 declare(strict_types = 1);
 
-namespace Raketa\BackendTestTask\Controller;
+namespace Raketa\BackendTestTask\Presentation\Controller;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Raketa\BackendTestTask\View\ProductsView;
+use Raketa\BackendTestTask\Application\DTOResponse\JsonResponse;
+use Raketa\BackendTestTask\Presentation\View\ProductsView;
 
 readonly class GetProductsController
 {

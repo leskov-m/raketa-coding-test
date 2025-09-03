@@ -2,15 +2,17 @@
 
 declare(strict_types = 1);
 
-namespace Raketa\BackendTestTask\Domain;
+namespace Raketa\BackendTestTask\Domain\Entity;
 
-final class Cart
+use Raketa\BackendTestTask\Application\Contracts\Entity;
+
+final class Cart implements Entity
 {
     public function __construct(
-        readonly private string $uuid,
-        readonly private Customer $customer,
+        readonly private string        $uuid,
         readonly private string $paymentMethod,
-        private array $items,
+        private array                  $items,
+        readonly private ?Customer     $customer = null,
     ) {
     }
 
@@ -19,7 +21,7 @@ final class Cart
         return $this->uuid;
     }
 
-    public function getCustomer(): Customer
+    public function getCustomer(): ?Customer
     {
         return $this->customer;
     }

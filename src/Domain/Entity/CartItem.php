@@ -2,9 +2,11 @@
 
 declare(strict_types = 1);
 
-namespace Raketa\BackendTestTask\Domain;
+namespace Raketa\BackendTestTask\Domain\Entity;
 
-final readonly class CartItem
+use Raketa\BackendTestTask\Application\Contracts\Entity;
+
+final readonly class CartItem implements Entity
 {
     public function __construct(
         public string $uuid,

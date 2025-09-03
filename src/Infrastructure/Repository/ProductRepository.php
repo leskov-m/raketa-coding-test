@@ -2,12 +2,14 @@
 
 declare(strict_types = 1);
 
-namespace Raketa\BackendTestTask\Repository;
+namespace Raketa\BackendTestTask\Infrastructure\Repository;
 
 use Doctrine\DBAL\Connection;
-use Raketa\BackendTestTask\Repository\Entity\Product;
+use Raketa\BackendTestTask\Domain\Entity\Product;
+use Raketa\BackendTestTask\Domain\Repository\ProductRepositoryInterface;
+use Raketa\BackendTestTask\Infrastructure\Exceptions\RepositoryException;
 
-class ProductRepository
+class ProductRepository implements ProductRepositoryInterface
 {
     private Connection $connection;
 
@@ -23,7 +25,7 @@ class ProductRepository
         );
 
         if (empty($row)) {
-            throw new Exception('Product not found');
+            throw new RepositoryException('Product not found');
         }
 
         return $this->make($row);

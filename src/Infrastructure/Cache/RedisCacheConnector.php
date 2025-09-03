@@ -1,18 +1,20 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
-namespace Raketa\BackendTestTask\Infrastructure;
+namespace Raketa\BackendTestTask\Infrastructure\Cache;
 
-use Raketa\BackendTestTask\Domain\Cart;
-use Redis;
+use Raketa\BackendTestTask\Application\Contracts\CacheConnectorInterface;
+use Raketa\BackendTestTask\Application\Contracts\SerializableInstance;
+use Raketa\BackendTestTask\Infrastructure\Exceptions\ConnectorException;
 use RedisException;
+use Redis;
 
-class Connector
+class RedisCacheConnector implements CacheConnectorInterface
 {
     private Redis $redis;
 
-    public function __construct($redis)
+    public function __construct(Redis $redis)
     {
         return $this->redis = $redis;
     }
@@ -20,7 +22,7 @@ class Connector
     /**
      * @throws ConnectorException
      */
-    public function get(Cart $key)
+    public function get(string $key)
     {
         try {
             return unserialize($this->redis->get($key));
@@ -32,7 +34,7 @@ class Connector
     /**
      * @throws ConnectorException
      */
-    public function set(string $key, Cart $value)
+    public function set(string $key, SerializableInstance $value)
     {
         try {
             $this->redis->setex($key, 24 * 60 * 60, serialize($value));

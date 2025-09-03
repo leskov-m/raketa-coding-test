@@ -1,9 +1,11 @@
 <?php
 
-namespace Raketa\BackendTestTask\View;
+declare(strict_types = 1);
 
-use Raketa\BackendTestTask\Repository\Entity\Product;
-use Raketa\BackendTestTask\Repository\ProductRepository;
+namespace Raketa\BackendTestTask\Presentation\View;
+
+use Raketa\BackendTestTask\Domain\Entity\Product;
+use Raketa\BackendTestTask\Infrastructure\Repository\ProductRepository;
 
 readonly class ProductsView
 {

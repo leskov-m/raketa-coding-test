@@ -2,9 +2,11 @@
 
 declare(strict_types = 1);
 
-namespace Raketa\BackendTestTask\Repository\Entity;
+namespace Raketa\BackendTestTask\Domain\Entity;
 
-readonly class Product
+use Raketa\BackendTestTask\Application\Contracts\Entity;
+
+readonly class Product implements Entity
 {
     public function __construct(
         private int $id,
