@@ -14,13 +14,13 @@ readonly class GetCartController
 {
     public function __construct(
         public CartView $cartView,
-        public CartService $cartManager
+        public CartService $cartService
     ) {
     }
 
     public function get(RequestInterface $request): ResponseInterface
     {
-        $cart = $this->cartManager->getCart();
+        $cart = $this->cartService->getCart();
 
         $response = new JsonResponse();
         $response->fill($this->cartView->toArray($cart));
